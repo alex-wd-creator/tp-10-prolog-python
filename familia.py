@@ -1,47 +1,55 @@
-padres = {
-    "zeus": "cronos",  
-    "kratos": "zeus", 
-    "atreus": "kratos",
-     
-    "poseidon": "cronos",
-    }
+progenitores = {
+    "zeus": {"cronos", "rhea"},
+    "poseidon": {"cronos", "rhea"},
+    "kratos": {"zeus", "callisto"},
+    "calliope": {"kratos", "lysandra"},
+    "atreus": {"kratos", "laufey"},
+}
 
-madres = {
-    "zeus": "rhea", 
-    "kratos": "callisto", 
-    "calliope": "lysandra", 
-    "atreus": "laufey",
-    }
+hijos_de = {
+    "cronos": {"zeus", "poseidon"},
+    "rhea": {"zeus", "poseidon"},
+    "zeus": {"kratos"},
+    "callisto": {"kratos"},
+    "kratos": {"calliope", "atreus"},
+    "lysandra": {"calliope"},
+    "laufey": {"atreus"},
+}
 
-def hermanos():
-    hermanos = {}
-    for hijo in padres:
-        padre = padres[hijo]
-        madre = madres.get(hijo)
-        if padre and madre:
 
-            hermanos[hijo] = [h for h in padres if padres[h] == padre or madres.get(h) == madre and h != hijo]
-            for h in hermanos[hijo]:
-                if h == hijo:
-                    hermanos[hijo].remove(h)
-            print(f"Hermanos de {hijo}: {hermanos[hijo]}")
-    return hermanos
+def obtener_hermanos():
+    diccionario_hermanos = {}
 
-# abuelos: cronos y zeus
-# orden: cronos-zeus-kratos-atreus (por ejemplo)
-# primero deberia obtener los hijos e ir escalando para conseguir el padre del padre
+    for persona, padres in progenitores.items():
+        posibles_hermanos = set()
 
-def abuelos():
-    abuelos = {}
-    
-    for hijo in padres:
-        abuelo = padres.get("zeus")
-        padre = padres[hijo]
-        nieto = hijo
+        for padre in padres:
+            posibles_hermanos.update(hijos_de.get(padre, set()))
 
-        abuelos[nieto] = [abuelo]
-        print(abuelos)
-    return abuelos
+        hermanos_reales = posibles_hermanos - {persona}
 
-            
-abuelos()
+        diccionario_hermanos[persona] = hermanos_reales
+
+    return diccionario_hermanos
+
+
+def obtener_abuelos():
+    diccionario_abuelos = {}
+
+    for persona, padres in progenitores.items():
+        conjunto_abuelos = set()
+
+        for padre in padres:
+            padres_del_padre = progenitores.get(padre, set())
+            conjunto_abuelos.update(padres_del_padre)
+
+        diccionario_abuelos[persona] = conjunto_abuelos
+
+    return diccionario_abuelos
+
+
+for persona, lista_hermanos in obtener_hermanos().items():
+    print(f"Hermanos de {persona}: {lista_hermanos}")
+
+for persona, lista_abuelos in obtener_abuelos().items():
+    print(f"Abuelos de {persona}: {lista_abuelos}")
