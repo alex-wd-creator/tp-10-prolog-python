@@ -1,9 +1,9 @@
 padres = {
-    "zeus": "cronos", 
-    "poseidon": "cronos", 
+    "zeus": "cronos",  
     "kratos": "zeus", 
-    "calliope": "kratos", 
     "atreus": "kratos",
+     
+    "poseidon": "cronos",
     }
 
 madres = {
@@ -27,3 +27,21 @@ def hermanos():
             print(f"Hermanos de {hijo}: {hermanos[hijo]}")
     return hermanos
 
+# abuelos: cronos y zeus
+# orden: cronos-zeus-kratos-atreus (por ejemplo)
+# primero deberia obtener los hijos e ir escalando para conseguir el padre del padre
+
+def abuelos():
+    abuelos = {}
+    
+    for hijo in padres:
+        abuelo = padres.get("zeus")
+        padre = padres[hijo]
+        nieto = hijo
+
+        abuelos[nieto] = [abuelo]
+        print(abuelos)
+    return abuelos
+
+            
+abuelos()
